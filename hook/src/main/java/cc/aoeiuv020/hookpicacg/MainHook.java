@@ -102,5 +102,34 @@ public class MainHook implements IXposedHookLoadPackage {
                         linearLayout_announcements.setVisibility(View.GONE);
                     }
                 });
+        XposedHelpers.findAndHookMethod(
+                "com.picacomic.fregata.adapters.ComicPageRecyclerViewAdapter",
+                lpparam.classLoader,
+                "onBindViewHolder",
+                XposedHelpers.findClass("android.support.v7.widget.RecyclerView$ViewHolder", lpparam.classLoader),
+                int.class,
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        XposedBridge.log("beforeHookedMethod: ComicPageRecyclerViewAdapter.onBindViewHolder");
+                        Object viewHolder = param.args[0];
+                        if (!TextUtils.equals(viewHolder.getClass().getName(), "com.picacomic.fregata.holders.AdvertisementListViewHolder")) {
+                            return;
+                        }
+                        View webView_ads = (View) XposedHelpers.getObjectField(viewHolder, "itemView");
+                        webView_ads.setVisibility(View.GONE);
+                        Object lp = XposedHelpers.newInstance(XposedHelpers.findClass("android.support.v7.widget.RecyclerView$LayoutParams", lpparam.classLoader), 0, 0);
+                        webView_ads.setLayoutParams((ViewGroup.LayoutParams) lp);
+                    }
+
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        XposedBridge.log("afterHookedMethod: HomeFragment.onCreateView");
+                        View viewPager_banner = (View) XposedHelpers.getObjectField(param.thisObject, "viewPager_banner");
+                        ((View) (viewPager_banner.getParent())).setVisibility(View.GONE);
+                        View linearLayout_announcements = (View) XposedHelpers.getObjectField(param.thisObject, "linearLayout_announcements");
+                        linearLayout_announcements.setVisibility(View.GONE);
+                    }
+                });
     }
 }
