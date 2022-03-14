@@ -19,7 +19,7 @@
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="解除91短视频部分限制" />
+            android:value="给哔咔去广告" />
         <meta-data
             android:name="xposedminversion"
             android:value="82" />
