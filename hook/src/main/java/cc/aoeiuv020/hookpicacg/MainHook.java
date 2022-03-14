@@ -71,6 +71,8 @@ public class MainHook implements IXposedHookLoadPackage {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         XposedBridge.log("afterHookedMethod: MainActivity.onCreate(Bundle)");
+                        View[] buttons_tabbar = (View[]) XposedHelpers.getObjectField(param.thisObject, "buttons_tabbar");
+                        buttons_tabbar[2].setVisibility(View.GONE);
                         Activity activity = (Activity) param.thisObject;
                         ViewGroup root = (ViewGroup) ((ViewGroup) (activity.findViewById(android.R.id.content))).getChildAt(0);
                         for (int i = root.getChildCount() - 1; i >= 0; i--) {
