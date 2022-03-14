@@ -46,7 +46,19 @@ public class MainHook implements IXposedHookLoadPackage {
                 new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        XposedBridge.log("beforeHookedMethod: init(Context)");
+                        XposedBridge.log("beforeHookedMethod: PopupWebview.init(Context)");
+                        param.setResult(null);
+                    }
+                });
+        XposedHelpers.findAndHookMethod(
+                "com.picacomic.fregata.utils.views.BannerWebview",
+                lpparam.classLoader,
+                "init",
+                Context.class,
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        XposedBridge.log("beforeHookedMethod: BannerWebview.init(Context)");
                         param.setResult(null);
                     }
                 });
