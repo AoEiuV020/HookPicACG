@@ -6,4 +6,4 @@ set -e
 cd $(dirname $0)
 versionName=$1
 versionName=${versionName:=$(./latest-version.sh)}
-cat ./ChangeLog.txt |sed -n "/$versionName:/,\$p" |sed '/^$/,$d;1d' |sed '1s/[，,]$//;1s/^\(.*\)$/### \1\n/'
+cat ./ChangeLog.txt |sed -n "/$versionName:/,\$p" |sed '/^$/,$d;1d'

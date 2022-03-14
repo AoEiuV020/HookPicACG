@@ -25,12 +25,12 @@ jobs:
           then
               CREATE_RELEASE="true"
               BUILD_VERSION=${GITHUB_REF#refs/tags/}
-              RELEASE_BODY=$(./latest-changelog.sh $BUILD_VERSION)
+              RELEASE_BODY=$(./latest-changelog.sh $BUILD_VERSION |sed '1s/[，,]$//;1s/^\(.*\)$/### \1\n/')
               if [[ -z "$RELEASE_BODY" ]]
               then
                   RELEASE_BODY='### ${{ github.event.head_commit.message }}'
               fi
-              TG_CHANGELOG="$RELEASE_BODY"
+              TG_CHANGELOG=$(./latest-changelog.sh $BUILD_VERSION |sed '/^$/,$d;1d' |sed -n '{;=;p}' | sed "N;s/\n/. /g")
           elif [[ ${GITHUB_REF} == refs/pull* ]]
           then
               CREATE_RELEASE="false"
