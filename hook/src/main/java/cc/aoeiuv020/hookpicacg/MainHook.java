@@ -122,5 +122,19 @@ public class MainHook implements IXposedHookLoadPackage {
                         webView_ads.setLayoutParams((ViewGroup.LayoutParams) lp);
                     }
                 });
+        XposedHelpers.findAndHookMethod("com.picacomic.fregata.adapters.ComicListRecyclerViewAdapter", lpparam.classLoader, "onBindViewHolder", XposedHelpers.findClass("android.support.v7.widget.RecyclerView$ViewHolder", lpparam.classLoader), int.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                Object viewHolder = param.args[0];
+                if (viewHolder.getClass().getSimpleName().equals("AdvertisementListViewHolder")) {
+                    param.setResult(null);
+                    View itemView = (View) XposedHelpers.getObjectField(viewHolder, "itemView");
+                    ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) itemView.getLayoutParams();
+                    // 完全隐藏会影响分页加载的逻辑，所以保留一点，
+                    lp.height = 1;
+                    itemView.setLayoutParams(lp);
+                }
+            }
+        });
     }
 }
