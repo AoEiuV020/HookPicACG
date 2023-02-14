@@ -9,6 +9,7 @@ on:
       - '**/README.md'
       - '.github/workflows/*'
       - '!.github/workflows/main.yml'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -31,7 +32,7 @@ jobs:
                   RELEASE_BODY='### ${{ github.event.head_commit.message }}'
                   TG_CHANGELOG="$(echo "$RELEASE_BODY"|sed -n "s/### \(.*\)/\1/p" |sed -n '{;=;p}' | sed "N;s/\n/. /g")"
               else
-                  TG_CHANGELOG=$(./latest-changelog.sh $BUILD_VERSION |sed '/^$/,$d;1d' |sed -n '{;=;p}' | sed "N;s/\n/. /g")
+                  TG_CHANGELOG=$(./latest-changelog.sh $BUILD_VERSION |sed -n '{;=;p}' | sed "N;s/\n/. /g")
               fi
           elif [[ ${GITHUB_REF} == refs/pull* ]]
           then
@@ -88,7 +89,7 @@ jobs:
           releaseDirectory: ./hook/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyStorePassword: ${{ secrets.KEY_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
       - name: Build with Gradle
         run: |
